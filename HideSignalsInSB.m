@@ -116,10 +116,10 @@ for iGroup = 1:numGroups
     end
 
     hideSignalsSz = size(signalsToHide, 2);
-    %looping trough the signals that are to be hidden
+    %looping trough the signals that are to be hidden and executes
+    %signalbuilder function to hide them
     for iSignal = 1:hideSignalsSz
         signalbuilder(cell2mat(findAllSBs(selectedSB)), 'hidesignal', signalsToHide{iSignal}, iGroup);
-        breakme2 = 0;
     end
 
 %signalbuilder(cell2mat(findAllSBs(selectedSB)), 'activegroup', iGroup);
