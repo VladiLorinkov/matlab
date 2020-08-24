@@ -65,26 +65,61 @@ for iGroup = 1:numGroups
     %getting the shown signals in the test case
     activeSigIdx = sbData.dataSet(iGroup).activeDispIdx; 
     shownSignalNames = signals(activeSigIdx);
+    
+    
     matchLead = [];
     matchTrail = [];
-    signalsToHide = '';
+    foundSignalsLead = [];
+    foundSignalsTrail = [];
+    signalsToHide = [];
     
-    
+    %search for a match from data input for leading string
     if (searchLead)
         matchLead = regexp(shownSignalNames, leadStrExpr);
+        %indexing the matched signals
+        foundSignalsLead  = cellfun('length', matchLead);
     end
 
+    %search for a match from data input for trailing string
     if (searchTrail)
         matchTrail = regexp(shownSignalNames, trailStrExpr);
+        %indexing the matched signals
+        foundSignalsTrail = cellfun('length', matchTrail);
     end
     
-    
-%signalsToHide = shownSignalNames{matchedSignalIndx};
-    
+    %if there is no match in current testcase, switch the next one
+    if(isempty(foundSignalsLead) && isempty(foundSignalsTrail)) 
+        continue;
+    end
+
+    % create a list of all signals that are going to be hidden and store in
+    % signalsToHide variable
     shownSignals = size(shownSignalNames, 2);
-    %looping trough the shown signals
     for iSignal = 1:shownSignals
-        %TODO
+        if (~isempty(foundSignalsLead))
+            
+            %append the signal names with matched leading string
+            if(foundSignalsLead(iSignal))
+            signalsToHide{end+1} = shownSignalNames{iSignal};
+            end
+            
+        end
+        
+        if(~isempty(foundSignalsTrail))
+        
+            %append the signal names with matched trailing string
+            if(foundSignalsTrail(iSignal))
+            signalsToHide{end+1} = shownSignalNames{iSignal};
+            end
+            
+        end
+    end
+
+    hideSignalsSz = size(signalsToHide, 2);
+    %looping trough the signals that are to be hidden
+    for iSignal = 1:hideSignalsSz
+        signalbuilder(cell2mat(findAllSBs(selectedSB)), 'hidesignal', signalsToHide{iSignal}, iGroup);
+        breakme2 = 0;
     end
 
 %signalbuilder(cell2mat(findAllSBs(selectedSB)), 'activegroup', iGroup);
