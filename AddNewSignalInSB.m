@@ -24,7 +24,7 @@ userInput = inputdlg(prompt,dlgTitle,dimension, defVal);
 newSignalName = userInput{1};
 newSignalVal = str2num(userInput{2});
 
-if(isempty(newSignal{1}))
+if(isempty(newSignalName)
     error('You have not entered the name of the new signal');
 end
 
